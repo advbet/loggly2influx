@@ -10,8 +10,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/influxdata/influxdb/client/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type logglyClient struct {
