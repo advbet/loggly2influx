@@ -25,6 +25,7 @@ var conf struct {
 		account string
 		user    string
 		pass    string
+		token   string
 		query   string
 	}
 	influx struct {
@@ -74,7 +75,14 @@ func (lc *logglyClient) TagsCount(field string, query string, from, to time.Time
 		to.UTC().Format(time.RFC3339),
 	)
 
-	resp, err := lc.client.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	if conf.loggly.token != "" {
+		req.Header.Add("Authorization", fmt.Sprintf("bearer %s", conf.loggly.token))
+	}
+	if err != nil {
+		return nil, err
+	}
+	resp, err := lc.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -191,6 +199,7 @@ func main() {
 	flag.StringVar(&conf.loggly.account, "loggly-account", "", "Loggly account")
 	flag.StringVar(&conf.loggly.user, "loggly-user", "", "Loggly username")
 	flag.StringVar(&conf.loggly.pass, "loggly-pass", "", "Loggly password")
+	flag.StringVar(&conf.loggly.token, "loggly-token", "", "Loggly access token")
 	flag.StringVar(&conf.loggly.query, "loggly-query", "", "Query for data lookup, can be empty")
 	flag.StringVar(&conf.influx.url, "influx-url", "", "Influx DB URL")
 	flag.StringVar(&conf.influx.database, "influx-database", "", "Influx database name")
@@ -198,8 +207,17 @@ func main() {
 	flag.DurationVar(&conf.interval, "interval", time.Minute, "Data poll interval")
 	flag.Parse()
 
+	baseURL := url.URL{
+		Scheme: "https",
+		Host:   fmt.Sprintf("%s.loggly.com", conf.loggly.account),
+		Path:   "/apiv2",
+	}
+	if conf.loggly.pass != "" {
+		baseURL.User = url.UserPassword(conf.loggly.user, conf.loggly.pass)
+	}
+
 	lc := &logglyClient{
-		baseURL: fmt.Sprintf("https://%s:%s@%s.loggly.com/apiv2", conf.loggly.user, conf.loggly.pass, conf.loggly.account),
+		baseURL: baseURL.String(),
 		client:  http.DefaultClient,
 	}
 
@@ -211,5 +229,6 @@ func main() {
 	}
 	defer influx.Close()
 
+	logrus.WithField("baseURL", baseURL.String()).Info("starting loggly poller")
 	loop(influx, lc, conf.interval)
 }
