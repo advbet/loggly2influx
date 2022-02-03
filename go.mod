@@ -1,4 +1,4 @@
-module bitbucket.org/advbet/loggly2influx
+module github.com/advbet/loggly2influx
 
 go 1.12
 
