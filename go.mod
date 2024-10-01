@@ -1,19 +1,18 @@
 module github.com/advbet/loggly2influx
 
-go 1.17
+go 1.23
 
 require (
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
-	github.com/influxdata/influxdb-client-go/v2 v2.8.1
-	github.com/sirupsen/logrus v1.4.2
+	github.com/influxdata/influxdb-client-go/v2 v2.14.0
+	github.com/sirupsen/logrus v1.9.3
 )
 
 require (
-	github.com/deepmap/oapi-codegen v1.8.2 // indirect
+	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839 // indirect
-	github.com/konsorten/go-windows-terminal-sequences v1.0.1 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
+	github.com/oapi-codegen/runtime v1.1.1 // indirect
+	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
 )
