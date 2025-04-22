@@ -1,7 +1,8 @@
 module github.com/advbet/loggly2influx
 
-go 1.23
-toolchain go1.24.1
+go 1.24
+
+toolchain go1.24.2
 
 require (
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
